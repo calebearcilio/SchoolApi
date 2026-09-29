@@ -8,4 +8,13 @@ const createStudentSchema = z.object({
   email: z.email("Formato de email inválido."),
 });
 
-module.exports = createStudentSchema;
+const updateStudentSchema = createStudentSchema
+  .partial()
+  .refine((student) => Object.keys(student).length > 0, {
+    message: "Informe ao menos um campo para atualizar.",
+  });
+
+module.exports = {
+  createStudentSchema,
+  updateStudentSchema,
+};

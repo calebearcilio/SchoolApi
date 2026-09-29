@@ -1,8 +1,8 @@
 const ApiError = require("./apiError");
 
 class StudentDataError extends ApiError {
-  constructor(message = "Dados do estudante inválidos.") {
-    super(message, 400);
+  constructor(message = "Dados do estudante inválidos.", errors = []) {
+    super(message, 400, errors);
   }
 }
 

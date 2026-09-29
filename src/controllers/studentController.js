@@ -36,6 +36,23 @@ const studentController = {
     }
   },
 
+  async update(req, res) {
+    try {
+      const student = await studentService.update(req.params.id, req.body);
+      return res.status(200).json({ student });
+    } catch (error) {
+      const response = {
+        error: error.message ?? "Erro interno do servidor.",
+      };
+
+      if (error.errors?.length) {
+        response.errors = error.errors;
+      }
+
+      return res.status(error.statusCode ?? 500).json(response);
+    }
+  },
+
   async post(req, res) {
     try {
       const student = await studentService.create(req.body);

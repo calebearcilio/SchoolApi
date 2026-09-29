@@ -1,14 +1,19 @@
-const createStudentSchema = require("../schemas/studentSchema");
+const { StudentDataError } = require("../errors/studentError");
+const {
+  createStudentSchema,
+  updateStudentSchema,
+} = require("../schemas/studentSchema");
 const formatZodErrors = require("../utils/formatZodErrors");
 
-const validateStudent = (req, res, next) => {
+const validate = (schema) => (req, res, next) => {
   try {
-    const result = createStudentSchema.safeParse(req.body ?? {});
+    const result = schema.safeParse(req.body ?? {});
 
     if (!result.success) {
-      throw new StudentDataError("Verifique os dados informados.", formatZodErrors(
-        result.error.issues
-      ));
+      throw new StudentDataError(
+        "Verifique os dados informados.",
+        formatZodErrors(result.error.issues),
+      );
     }
 
     req.body = result.data;
@@ -18,4 +23,8 @@ const validateStudent = (req, res, next) => {
   }
 };
 
+const validateStudent = validate(createStudentSchema);
+const validateStudentUpdate = validate(updateStudentSchema);
+
 module.exports = validateStudent;
+module.exports.validateStudentUpdate = validateStudentUpdate;

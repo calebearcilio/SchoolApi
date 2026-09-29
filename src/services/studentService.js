@@ -1,5 +1,8 @@
 const prisma = require("../database/prisma");
-const { StudentDataError } = require("../errors/studentError");
+const {
+  StudentDataError,
+  DuplicateEmailError,
+} = require("../errors/studentError");
 const StudentNotFoundError = require("../errors/studentNotFoundError");
 
 function parseId(id) {
@@ -36,6 +39,24 @@ const studentService = {
     }
 
     return student;
+  },
+
+  async update(id, student) {
+    const parsedId = parseId(id);
+    await this.findUnique(parsedId);
+
+    try {
+      return await prisma.student.update({
+        where: { id: parsedId },
+        data: student,
+      });
+    } catch (error) {
+      if (error?.code === "P2002") {
+        throw new DuplicateEmailError();
+      }
+
+      throw error;
+    }
   },
 
   async create(student) {
