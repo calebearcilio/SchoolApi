@@ -75,6 +75,15 @@ const studentService = {
       throw error;
     }
   },
+
+  async delete(id) {
+    const parsedId = parseId(id);
+
+    // Verifica a existência antes de remover (404 se não existir).
+    await this.findUnique(parsedId);
+
+    await prisma.student.delete({ where: { id: parsedId } });
+  },
 };
 
 module.exports = studentService;

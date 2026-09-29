@@ -15,5 +15,6 @@ studentRoutes.patch(
   validateStudentUpdate,
   studentController.update,
 );
+studentRoutes.delete("/students/:id", studentController.delete);
 
 module.exports = studentRoutes;

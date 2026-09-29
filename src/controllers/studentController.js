@@ -69,6 +69,18 @@ const studentController = {
       return res.status(error.statusCode ?? 500).json(response);
     }
   },
+
+  async delete(req, res) {
+    try {
+      await studentService.delete(req.params.id);
+      // 204 No Content: remoção bem-sucedida, sem corpo na resposta.
+      return res.status(204).send();
+    } catch (error) {
+      return res
+        .status(error.statusCode ?? 500)
+        .json({ error: error.statusCode ? error.message : "Erro interno do servidor." });
+    }
+  },
 };
 
 module.exports = studentController;
