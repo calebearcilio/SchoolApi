@@ -1,13 +1,17 @@
 const prisma = require("../database/prisma");
 
 const studentService = {
-  async findMany(page, pageSize) {
-    const students = await prisma.student.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+  async findMany(page, pageSize, orderBy, order) {
+    const [students, total] = await Promise.all([
+      prisma.student.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { [orderBy]: order },
+      }),
+      prisma.student.count(),
+    ]);
 
-    return students;
+    return { students, total };
   },
 
   async create(student) {

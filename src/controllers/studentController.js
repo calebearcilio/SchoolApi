@@ -4,7 +4,13 @@ const studentController = {
   async getAll(req, res) {
     try {
       const { page, pageSize } = req.pagination;
-      const { students, total } = await studentService.findMany(page, pageSize);
+      const { orderBy, order } = req.sorting;
+      const { students, total } = await studentService.findMany(
+        page,
+        pageSize,
+        orderBy,
+        order,
+      );
       return res.status(200).json({ students, total });
     } catch (error) {
       const response = {
