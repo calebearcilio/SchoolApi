@@ -25,6 +25,17 @@ const studentController = {
     }
   },
 
+  async getById(req, res) {
+    try {
+      const student = await studentService.findUnique(req.params.id);
+      return res.status(200).json({ student });
+    } catch (error) {
+      return res.status(error.statusCode ?? 500).json({
+        error: error.statusCode ? error.message : "Erro interno do servidor.",
+      });
+    }
+  },
+
   async post(req, res) {
     try {
       const student = await studentService.create(req.body);
